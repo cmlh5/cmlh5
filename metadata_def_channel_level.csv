@@ -1,0 +1,11 @@
+Metadata name; Units; Type; Mandatory; Description
+frequency; GHz; float32; True; None
+polarization; [‘V’, ‘H’, ‘v’, ‘h’]; string; True; None
+tx_site; None; string; False; None
+rx_site; None; string; False; None
+channel_id; None; string; True; None
+atpc; [‘True’, ‘False’]; bool; True; None
+tx_quantization; dBm; float32; False; None
+rx_quantization; dBm; float32; False; None
+tx_const; dBm; float32; False; value of the TX level if ATPC is off
+channel_name; None; string; False; None

@@ -1,0 +1,16 @@
+#Metadata name; Units; Type; Mandatory; Description
+site_a_latitude; Decimal degrees; float32; True; None
+site_a_longitude; Decimal degrees; float32; True; None
+site_a_altitude; Meter; float32; False; None
+site_a_antenna_above_ground; Meter; float32; False; None
+site_a_id; None; string; False; None
+site_b_latitude; Decimal degrees; float32; True; None
+site_b_longitude; Decimal degrees; float32; True; None
+site_b_altitude; Meter; float32; False; None
+site_b_antenna_above_ground; Meter; float32; False; None
+site_b_id; None; string; False; None
+length; Kilometer; float32; True; None
+id; None; string; True; None
+system_manufacturer; None; string; False; None
+system_model; None; string; False; None
+system_configuration; None; string; False; None
