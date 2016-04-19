@@ -1,4 +1,4 @@
-#!/Users/chwala-c/anaconda/bin/python
+#!/usr/bin/env python
 
 #----------------------------------------------------------------------------
 # Name:         cmlh5_checker
@@ -12,21 +12,16 @@
 #----------------------------------------------------------------------------
 
 import sys
-import h5py
+import os
 
-from . import io
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-metadata_dict = io._load_metadata()
-
-
-def check_cmlh5_file(fn):
-    
-
+from pycmlh5.io import read_and_check_metadata
 
 if __name__ == "__main__":
     fn = sys.argv[0]
     print fn
-    h5_reader = h5py.File(fn, mode='r')
+    cml_metadata_list, error_list = io.read_and_check_metadata(fn)
 
 
 

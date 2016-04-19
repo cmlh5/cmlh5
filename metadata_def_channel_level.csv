@@ -4,8 +4,11 @@ polarization; [‘V’, ‘H’, ‘v’, ‘h’]; string; True; None
 tx_site; None; string; False; None
 rx_site; None; string; False; None
 channel_id; None; string; True; None
-atpc; [‘True’, ‘False’]; bool; True; None
+atpc; [‘on’, ‘off’]; string; True; None
 tx_quantization; dBm; float32; False; None
 rx_quantization; dBm; float32; False; None
 tx_const; dBm; float32; False; value of the TX level if ATPC is off
 channel_name; None; string; False; None
+additional_info; None; None; False; None
+sampling_type; [‘mean’, ‘max’, ‘min’, ‘instantaneous’]; string; False; None
+temporal_resolution; [‘not_constant, ‘min’, ‘s’, ‘30s’, ‘H’]; string, False; None

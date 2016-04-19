@@ -1,4 +1,4 @@
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 # Name:         io
 # Purpose:      Functions for reading and writing cml5h files
 #
@@ -7,15 +7,14 @@
 # Created:      19.04.2016
 # Copyright:    (c) Christian Chwala 2016
 # Licence:      The MIT License
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 
+import numpy as np
 import pandas as pd
 import h5py
 
-#metadata_root = pd.read_csv('metadata_def_root_level.csv', delimiter=';')
 
-
-def _load_metadata():
+def _load_metadata_def():
     metadata_def = {}
     metadata_def['root'] = pd.read_csv('metadata_def_root_level.csv', delimiter=';', index_col=0)
     metadata_def['cml'] = pd.read_csv('metadata_def_cml_level.csv', delimiter=';', index_col=0)
@@ -34,40 +33,102 @@ def _load_metadata():
     return metadata_dict
 
 
-def _read_root_metadata():
-    pass
+metadata_def = _load_metadata_def()
 
 
-def _read_cml_metadata(cml_g):
+def read_and_check_metadata(fn, strict_type_check=True):
+    h5_reader = h5py.File(fn, mode='r')
+
+    cml_list = []
+    error_list = []
+
+    for cml_g_name in h5_reader['/']:
+        cml_dict = {}
+        cml_dict[cml_g_name] = {}
+
+        cml_g = h5_reader['/' + cml_g_name]
+
+        cml_dict[cml_g_name]['metadata'], errors = \
+            _read_cml_metadata(cml_g, strict_type_check)
+        error_list = error_list + errors
+
+        for chan_g_name, chan_g in cml_g.items():
+            cml_dict[cml_g_name][chan_g_name] = {}
+            cml_dict[cml_g_name][chan_g_name]['metadata'], errors = \
+                _read_channel_metadata(chan_g, strict_type_check)
+            error_list = error_list + errors
+
+        cml_list.append(cml_dict)
+
+    return cml_list, error_list
+
+
+def _read_metadata(h5_group, level, strict_type_check=True):
     metadata = {}
-    metadata['link_id'] = cml_g.attrs['id']
-    metadata['length_km'] = cml_g.attrs['length']
-    metadata['site_A'] = {'lat':cml_g.attrs['site_a_latitude'],
-                          'lon': cml_g.attrs['site_a_longitude']}
-    metadata['site_B'] = {'lat':cml_g.attrs['site_b_latitude'],
-                          'lon': cml_g.attrs['site_b_longitude']}
-    return metadata
+    error_list = []
+    for metadata_name in metadata_def[level]:
+        try:
+            metadata_entry = h5_group.attrs[metadata_name]
+            metadata_entry = _convert_missing_values(metadata_entry,
+                                                     metadata_def[level][metadata_name]['Type'])
+            type_error = _check_metadata_type(metadata_name,
+                                              metadata_entry,
+                                              metadata_def[level][metadata_name]['Type'],
+                                              strict_type_check=strict_type_check)
+            if type_error is not None:
+                error_list.append('%s: %s' % (h5_group.name, type_error))
+
+            metadata[metadata_name] = metadata_entry
+        except KeyError:
+            if metadata_def[level][metadata_name]['Mandatory'] == 'True':
+                error_list.append('%s: Mandatory metadata `%s` is missing' %
+                                  (h5_group.name, metadata_name))
+            else:
+                continue
+    return metadata, error_list
 
 
-def _read_channels_metadata(cml_g):
-    tx_rx_pairs = {}
-    for chan_g_name, chan_g in cml_g.items():
-        tx_rx_pairs[chan_g_name] = {'name': chan_g_name,
-                                    'tx': 'tx_' + chan_g_name,
-                                    'rx': 'rx_' + chan_g_name,
-                                    'f_GHz': chan_g.attrs['frequency'],
-                                    'pol': chan_g.attrs['polarisation']}
-    return tx_rx_pairs
+def _read_root_metadata(root_g, strict_type_check=True):
+    return _read_metadata(root_g, 'root', strict_type_check)
 
 
-def _read_channels_data(cml_g):
-    data_dict = {}
-    for chan_g_name, chan_g in cml_g.items():
-        data_dict['rx_' + chan_g_name] = chan_g['RX'][:]
-        data_dict['tx_' + chan_g_name] = chan_g['TX'][:]
-    data = pd.DataFrame(data=data_dict, index=pd.DatetimeIndex(chan_g['time'][:] * 1e9, tz='UTC'))
+def _read_cml_metadata(cml_g, strict_type_check=True):
+    return _read_metadata(cml_g, 'cml', strict_type_check)
 
-    return data
+
+def _read_channel_metadata(chan_g, strict_type_check=True):
+    return _read_metadata(chan_g, 'channel', strict_type_check)
+
+
+def _check_metadata_type(metadata_name, metadata, type_str, strict_type_check=True):
+    error = None
+    if type_str == 'float32':
+        if not np.isnan(metadata):
+            if strict_type_check == True:
+                type_is_correct = (type(metadata) == np.float32)
+            else:
+                type_is_correct = ((type(metadata) == np.float32) or
+                                   (type(metadata) == np.float64))
+            if not type_is_correct:
+                error = ('Metadata `%s` is `%s` with type `%s` which should be np.float32' %
+                         (metadata_name, metadata, type(metadata)))
+    elif type_str == 'string':
+        if metadata is not None:
+            if not ((type(metadata) == np.string_) or
+                        (type(metadata) == str)):
+                error = ('Metadata `%s` is `%s` with type `%s` which should be a string' %
+                         (metadata_name, metadata, type(metadata)))
+    return error
+
+
+def _convert_missing_values(value, type_str):
+    if type_str == 'float32':
+        if (value == 'NA') or (value == 'NaN') or (value == 'nan'):
+            value = np.nan
+    if type_str == 'string':
+        if value == 'NA':
+            value = None
+    return value
 
 
 def read_cmlh5(fn):
