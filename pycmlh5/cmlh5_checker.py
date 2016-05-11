@@ -16,7 +16,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from pycmlh5.io import read_and_check_metadata
+from pycmlh5.metadata_def_parser import read_and_check_metadata
 
 if __name__ == "__main__":
     fn = sys.argv[0]
