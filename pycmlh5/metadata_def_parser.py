@@ -16,17 +16,17 @@ import h5py
 
 def _load_metadata_def():
     metadata_def = {}
-    metadata_def['root'] = pd.read_csv('metadata_def_root_level.csv', delimiter=';', index_col=0)
-    metadata_def['cml'] = pd.read_csv('metadata_def_cml_level.csv', delimiter=';', index_col=0)
-    metadata_def['channel'] = pd.read_csv('metadata_def_channel_level.csv', delimiter=';', index_col=0)
+    metadata_def['root'] = pd.read_csv('metadata_def_root_level.csv', delimiter=',', index_col=0)
+    metadata_def['cml'] = pd.read_csv('metadata_def_cml_level.csv', delimiter=',', index_col=0)
+    metadata_def['channel'] = pd.read_csv('metadata_def_channel_level.csv', delimiter=',', index_col=0)
 
     metadata_dict = {}
     for level in ['root', 'cml', 'channel']:
         metadata_dict[level] = {}
         for metadata_name in metadata_def[level].index.values:
             metadata_dict[level][metadata_name] = {}
-            for info in ['Units', 'Type', 'Mandatory', 'Description']:
-                entry = metadata_def[level].ix[metadata_name][' ' + info]
+            for info in metadata_def[level].columns:  # ['Units', 'Type', 'Mandatory', 'Description']:
+                entry = metadata_def[level].ix[metadata_name][info]
                 if type(entry) == str:
                     entry = entry.strip()
                 metadata_dict[level][metadata_name][info] = entry
@@ -102,22 +102,44 @@ def _read_channel_metadata(chan_g, strict_type_check=True):
 
 def _check_metadata_type(metadata_name, metadata, type_str, strict_type_check=True):
     error = None
-    if type_str == 'float32':
+    if (type_str == 'float16' or
+            type_str == 'float32' or
+            type_str == 'float64' or
+            type_str == 'float'):
+        try:
+            metadata_isnan = np.isnan(metadata)
+        except TypeError:
+            error = ('Metadata `%s` is `%s` with type `%s`, but it should be some kind of float' %
+                     (metadata_name, metadata, type(metadata)))
+            return error
+
         if not np.isnan(metadata):
-            if strict_type_check == True:
-                type_is_correct = (type(metadata) == np.float32)
+            if strict_type_check is True:
+                if type_str == 'float16':
+                    np_type = np.float16
+                if type_str == 'float32':
+                    np_type = np.float32
+                if type_str == 'float64':
+                    np_type = np.float64
+                if type_str == 'float':
+                    np_type = np.float
+                type_is_correct = (type(metadata) == np_type)
             else:
-                type_is_correct = ((type(metadata) == np.float32) or
-                                   (type(metadata) == np.float64))
+                type_is_correct = (type(metadata) == np.float16 or
+                                   (type(metadata) == np.float32) or
+                                   (type(metadata) == np.float64) or
+                                   (type(metadata) == np.float))
             if not type_is_correct:
-                error = ('Metadata `%s` is `%s` with type `%s` which should be np.float32' %
-                         (metadata_name, metadata, type(metadata)))
+                error = ('Metadata `%s` is `%s` with type `%s` which should be %s' %
+                         (metadata_name, metadata, type(metadata), type_str))
     elif type_str == 'string':
         if metadata is not None:
             if not ((type(metadata) == np.string_) or
                         (type(metadata) == str)):
                 error = ('Metadata `%s` is `%s` with type `%s` which should be a string' %
                          (metadata_name, metadata, type(metadata)))
+    else:
+        error = 'Metadata type_str `%s` for `%s` is not supported' % (type_str, metadata_name)
     return error
 
 

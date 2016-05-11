@@ -1,17 +1,17 @@
- Metadata name, Units/Values, Type, Description
- frequency, GHz, float,
- polarization," [‘V’, ‘H’, ‘v’, ‘h’]", string,
- tx_site," [‘site_a’, ‘site_b’]", string,
- rx_site, -, string,
- channel_id, -, string,
- atpc [s]," [‘on’, ‘off’]", string,
- tx_quantization, dBm, float,
- tx_quantization_type [t]," [‘rounded’, ‘truncated’]", string,
- rx_quantization, dBm, float,
- rx_quantization_type," [‘rounded’, ‘truncated’]", string,
- tx_const, dBm, float, value of the TX level if ATPC is off
- channel_name, -, string,
- additional_info, -,,
- sampling_type," [‘mean’, ‘max’, ‘min’, ‘instantaneous’]", string, [u]
- time_stamp_alignment [v]," [‘left’, ‘center’, ‘right’]", string, Info on the association of the time stamp regarding the aggregation period
- temporal_resolution," [‘not_constant, ‘min’, ‘s’, ‘30s’, ‘H’]", string,
+Metadata name,Units/Values,Type,Mandatory,Description
+frequency,GHz,float, True,
+polarization,"[‘V’, ‘H’, ‘v’, ‘h’]",string, True,
+tx_site,"[‘site_a’, ‘site_b’]",string, False,
+rx_site,-,string, False,
+channel_id,-,string, True,
+atpc,"[‘on’, ‘off’]",string, True,
+tx_quantization,dBm,float, False,
+tx_quantization_type,"[‘rounded’, ‘truncated’]",string, False,
+rx_quantization,dBm,float, False,
+rx_quantization_type,"[‘rounded’, ‘truncated’]",string, False,
+tx_const,dBm,float, False,value of the TX level if ATPC is off
+channel_name,-,string, False,
+additional_info,-,, False,
+sampling_type,"[‘mean’, ‘max’, ‘min’, ‘instantaneous’]",string, False,
+time_stamp_alignment,"[‘left’, ‘center’, ‘right’]",string, False,Info on the association of the time stamp regarding the aggregation period
+temporal_resolution,"[‘not_constant, ‘min’, ‘s’, ‘30s’, ‘H’]",string, False,
