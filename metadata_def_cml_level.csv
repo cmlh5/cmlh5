@@ -1,16 +1,18 @@
-#Metadata name; Units; Type; Mandatory; Description
-site_a_latitude; Decimal degrees; float32; True; None
-site_a_longitude; Decimal degrees; float32; True; None
-site_a_altitude; Meter; float32; False; None
-site_a_antenna_above_ground; Meter; float32; False; None
-site_a_id; None; string; False; None
-site_b_latitude; Decimal degrees; float32; True; None
-site_b_longitude; Decimal degrees; float32; True; None
-site_b_altitude; Meter; float32; False; None
-site_b_antenna_above_ground; Meter; float32; False; None
-site_b_id; None; string; False; None
-length; Kilometer; float32; False; None
-cml_id; None; string; True; None
-system_manufacturer; None; string; False; None
-system_model; None; string; False; None
-system_configuration; None; string; False; None
+ Metadata name, Units, Type, Description
+ site_a_latitude, Decimal degrees, float16,
+ site_a_longitude, Decimal degrees, float16,
+ site_a_altitude, Meter, float16,
+ site_a_antenna_above_ground, Meter, float16,
+ site_a_id, -, string,
+ site_b_latitude, Decimal degrees, float16,
+ site_b_longitude, Decimal degrees, float16,
+ site_b_altitude, Meter, float16,
+ site_b_antenna_above_ground, Meter, float16,
+ site_b_id, -, string,
+ length, Kilometer, float16, Strongly recommended
+ cml_ id, -, string,
+ cml_owner [q], -, string,
+ cml_operator [r], -, string,
+ system_manufacturer, -, string,
+ system_model, -, string,
+ system_configuration, -, string, Options are: ‘1+0’ ‘1+1_ SD ’ ‘1+1_HSB’ (‘2+0’) HSB = Hot standby SD = Space diversity

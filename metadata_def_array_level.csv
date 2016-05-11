@@ -1,0 +1,6 @@
+ metadata name, units/values, type, description
+ quantity, e.g. ‘power’, string,
+ unit, e.g. ‘dBm’, string,
+ side?," [‘transmitter’, ‘receiver’]", string,
+ sampling?," [‘min’, ‘max’, ‘instant’, ‘mean’]", string,
+ array_id, -, string,

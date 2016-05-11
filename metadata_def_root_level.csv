@@ -1,5 +1,5 @@
-Metadata name; Units; Type; Mandatory; Description
-file_format; None; string; True; This must always be set to ‘cmlh5’
-file_format_version; None; string; True; examples: ‘0.1, ‘1.2’, ...
-author_name; None; string; False; None
-author_email; None; string; False; None
+ Metadata name, Units, Type, Description
+ file_format, -, string, This must always be set to ‘CMLh5’
+ file_format_version, -, string," examples: ‘0.1, ‘1.2’, ..."
+ author_name, -, string,
+ author_email, -, string,

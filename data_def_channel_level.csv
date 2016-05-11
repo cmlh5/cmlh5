@@ -1,0 +1,8 @@
+ Name, Units, Type, Description
+ rx, dBm, float16,
+ rx_min, dBm, float16,
+ rx_max, dBm, float16,
+ tx, dBm, float16,
+ tx_min, dBm, float16,
+ tx_max, dBm, float16,
+ time, POSIX time, float64,
