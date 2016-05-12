@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# Name:         io
-# Purpose:      Functions for reading and writing cml5h files
+# Name:         metadata_def_parser
+# Purpose:      Functions for reading cmlh5 metadata definitions
 #
 # Authors:      Christian Chwala
 #
@@ -15,18 +15,20 @@ import h5py
 
 
 def _load_metadata_def():
-    metadata_def = {}
-    metadata_def['root'] = pd.read_csv('metadata_def_root_level.csv', delimiter=',', index_col=0)
-    metadata_def['cml'] = pd.read_csv('metadata_def_cml_level.csv', delimiter=',', index_col=0)
-    metadata_def['channel'] = pd.read_csv('metadata_def_channel_level.csv', delimiter=',', index_col=0)
+    # Parse CSV files with definitions to DataFrames and store them in a dict for each level
+    metadata_def_df_dict = {
+        'root': pd.read_csv('metadata_def_root_level.csv', delimiter=',', index_col=0),
+        'cml': pd.read_csv('metadata_def_cml_level.csv', delimiter=',', index_col=0),
+        'channel': pd.read_csv('metadata_def_channel_level.csv', delimiter=',', index_col=0)}
 
+    # Parse everything to a new dict with a different (more accessible...) structure
     metadata_dict = {}
     for level in ['root', 'cml', 'channel']:
         metadata_dict[level] = {}
-        for metadata_name in metadata_def[level].index.values:
+        for metadata_name in metadata_def_df_dict[level].index.values:
             metadata_dict[level][metadata_name] = {}
-            for info in metadata_def[level].columns:  # ['Units', 'Type', 'Mandatory', 'Description']:
-                entry = metadata_def[level].ix[metadata_name][info]
+            for info in metadata_def_df_dict[level].columns:  # ['Units', 'Type', 'Mandatory', 'Description']:
+                entry = metadata_def_df_dict[level].ix[metadata_name][info]
                 if type(entry) == str:
                     entry = entry.strip()
                 metadata_dict[level][metadata_name][info] = entry
@@ -152,15 +154,3 @@ def _convert_missing_values(value, type_str):
             value = None
     return value
 
-
-def read_cmlh5(fn):
-    h5_reader = h5py.File(fn, mode='r')
-    cml_list = []
-    cml = {}
-    for cml_g_name in h5_reader['/']:
-        cml_g = h5_reader['/' + cml_g_name]
-        cml['metadata'] = _read_cml_metadata(cml_g)
-        cml['channel'] = _read_channels_data()
-        cml_list.append(cml)
-    print '%d CMLs read in' % len(cml_list)
-    return cml_list
