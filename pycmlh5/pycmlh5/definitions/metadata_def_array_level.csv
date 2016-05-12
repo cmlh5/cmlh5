@@ -1,0 +1,6 @@
+metadata name,units/values,type,Mandatory,description
+quantity,e.g. ‘power’,string, True,
+unit,e.g. ‘dBm’,string, True,
+side?,"[‘transmitter’, ‘receiver’]",string, False,
+sampling?,"[‘min’, ‘max’, ‘instant’, ‘mean’]",string, False,
+array_id,-,string, False,

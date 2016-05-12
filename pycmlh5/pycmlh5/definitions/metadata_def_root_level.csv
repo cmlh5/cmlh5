@@ -1,0 +1,5 @@
+Metadata name,Units,Type,Mandatory,Description
+file_format,-,string, True,This must always be set to ‘CMLh5’
+file_format_version,-,string, True,"examples: ‘0.1, ‘1.2’, ..."
+author_name,-,string, False,
+author_email,-,string, False,

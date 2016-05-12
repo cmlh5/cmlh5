@@ -9,6 +9,7 @@
 # Licence:      The MIT License
 # ----------------------------------------------------------------------------
 
+import os
 import numpy as np
 import pandas as pd
 import h5py
@@ -16,14 +17,20 @@ import h5py
 
 def _load_metadata_def():
     # Parse CSV files with definitions to DataFrames and store them in a dict for each level
-    metadata_def_df_dict = {
-        'root': pd.read_csv('metadata_def_root_level.csv', delimiter=',', index_col=0),
-        'cml': pd.read_csv('metadata_def_cml_level.csv', delimiter=',', index_col=0),
-        'channel': pd.read_csv('metadata_def_channel_level.csv', delimiter=',', index_col=0)}
+    module_dir = os.path.dirname(__file__)
+    def_dir = 'definitions'
+    fn_for_level = {'root': 'metadata_def_root_level.csv',
+                    'cml': 'metadata_def_cml_level.csv',
+                    'channel': 'metadata_def_channel_level.csv'}
+    metadata_def_df_dict = {}
+    for level, fn in fn_for_level.iteritems():
+        full_path = os.path.join(module_dir, def_dir, fn)
+        metadata_def_df_dict[level] = pd.read_csv(full_path, delimiter=',', index_col=0)
 
     # Parse everything to a new dict with a different (more accessible...) structure
     metadata_dict = {}
-    for level in ['root', 'cml', 'channel']:
+    levels = fn_for_level.keys()
+    for level in levels:
         metadata_dict[level] = {}
         for metadata_name in metadata_def_df_dict[level].index.values:
             metadata_dict[level][metadata_name] = {}
