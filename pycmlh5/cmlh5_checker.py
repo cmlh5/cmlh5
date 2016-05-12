@@ -12,9 +12,9 @@
 #----------------------------------------------------------------------------
 
 import sys
-import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+#import os
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pycmlh5.metadata_def_parser import read_and_check_metadata
 
