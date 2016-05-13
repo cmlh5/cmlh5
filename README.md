@@ -1,3 +1,22 @@
-This is a test repository for the preliminary version of cmlh5 (the final name still has to be discussed), a file format for commercial microwave link data.
+# cmlh5 
+A file format for commercial (and other) microwave link data based on HDF5
 
-[Here](http://nbviewer.jupyter.org/github/cchwala/test_file_format/blob/master/Overview.ipynb) is an overview of the current status. 
+## Overview
+
+This repo holds 
+ * the documentation of the file format
+ * example implementations in different programming languages
+   * Python (currently only a first draft)
+   * R (not yet)
+   * MATLAB (not yet)
+ * example files
+ * and a tool to validate cmlh5 files.
+
+## File format checker/validator
+
+The validation tool `cmlh5_checker.py` is part of the example implementation in python `pycmlh5`, but is also available online.
+
+[**Link to online cmlh5_checker**](http://cmlh5.pythonanywhere.com/cmlh5_checker_app/default/index)
+
+
+Everything is WIP.
