@@ -1,0 +1,9 @@
+Package: Rcmlh5
+Type: Package
+Title: R package for manipulating cmlh5 files
+Version: 0.0
+Date: 2016-07-15
+Author: Martin Fencl <martin.fencl@cvut.cz>
+Maintainer: Martin Fencl <martin.fencl@cvut.cz>
+Description: Rcmlh5 provides set of tools for managing cmlh5,  a file format for commercial microwave link data format. It includes implemantation example with a sample dataset.
+License: MIT
