@@ -7,7 +7,7 @@ This repo holds
  * the documentation of the file format
  * example implementations in different programming languages
    * Python (currently only a first draft)
-   * R (not yet)
+   * R (currently only a first draft)
    * MATLAB (not yet)
  * example files
  * and a tool to validate cmlh5 files.
